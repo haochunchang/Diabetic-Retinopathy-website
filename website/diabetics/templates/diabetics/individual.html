@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<title>Individual Result</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link href="http://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
+{% load static %}
+<style>
+body {font-family: "Lato", sans-serif}
+body, html {
+    color: #FEFEFE;
+    background-color: #000;
+    
+}
+.w3-row img {margin-bottom: -8px}
+
+input[type="button"], input[type="submit"], button
+{
+     background-color: white;
+     background-image: url(image/build_button.png);
+     background-position: center center;
+     border-radius: 20px;
+     padding: 15px 32px;
+     display: inline-block;
+     font-size: 20px;
+     width: 250px;
+     transition: all 0.5s;
+     cursor: pointer;
+}
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+</style>
+
+<body>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-content" style="max-width:1500px">
+
+  <!-- Header -->
+  <header class="w3-container w3-xlarge w3-padding-24">
+    <a href="{% url 'diabetics:individual' pre_image.id %}" class="w3-btn w3-hover-white w3-round-large"> << PREVIOUS </a>
+      <a href="{% url 'diabetics:index' %}" class="w3-btn w3-hover-white w3-round-large">HOME</a>
+    <a href="{% url 'diabetics:individual' next_image.id %}" class="w3-right w3-btn w3-hover-white w3-round-large"> NEXT >> </a>
+  </header>
+  
+  
+  <div class="w3-row">
+    <!-- Photo -->
+    <div class="w3-col m6 w3-center w3-padding-large">
+      <h1 class="w3-center">{{ image.imagename }}</h1>
+      <img src="{{ image.image.url }}" style="width:100%">
+    </div>
+    <!-- Classification Results -->
+    <div class="w3-col m6 w3-center w3-padding-large">
+      <h1 class="w3-center">{{ image.result }}</h1>
+      {% if image.result == 'No DR' %}
+        <img src="{% static 'diabetics/images/icon/No DR.png' %}" class="w3-center">
+         <p>This eye has no DR! Congrat! Keep Going! <br> For more information about preventing DR. see <a href="http://www.webmd.com/diabetes/tc/diabetic-retinopathy-prevention"><b>here. </b></a></p>
+      {% elif image.result == 'Mild' %}
+        <img src="{% static 'diabetics/images/icon/Mild.png' %}" class="w3-center">
+        <p>You should go to see your doctor for more detailed check. <br> For more information about preventing DR. see <a href="http://www.webmd.com/diabetes/tc/diabetic-retinopathy-prevention"><b>here. </b></a></p>
+      {% elif image.result == 'Moderate' %}
+        <img src="{% static 'diabetics/images/icon/Moderate.png' %}" class="w3-center">
+        <p> <b style="color:red">Warning!</b> You should contact your doctors for <a href="http://www.nhs.uk/Conditions/Diabetic-retinopathy/Pages/Treatment.aspx">treatment!</a></p>
+      {% elif image.result == 'Severe' %}
+        <img src="{% static 'diabetics/images/icon/Severe.png' %}" class="w3-center">
+        <p> <b style="color:red">Danger! </b> Go to see your doctor!!<br> <a href="https://www.google.com.tw/maps/search/hospital/" style="color:red">Hospitals.</a></p>
+      {% elif image.result == 'Proliferative DR' %}
+        <img src="{% static 'diabetics/images/icon/Proliferative DR.png' %}" class="w3-center">
+        <p> <b style="color:red">Treat Immediately!</b></p>
+      {% else %}
+        <p>Cannot classified by our CNN model !!</p>
+      {% endif %}    
+    </div>    
+
+  </div> 
+</div>
+  
+  
+<!-- Footer -->
+<footer class="w3-grey w3-padding-32 w3-center">
+  <div class="w3-row">
+      <div class="w3-half">
+        <a href="{% url 'diabetics:list_view' %}" class="button"><button class="button"><span>View All</span></button></a>
+      </div>
+      <div class="w3-half">
+        <a href="{% url 'diabetics:summary' %}"><button class="button"><span>Summary</span></button></a>
+      </div>
+  </div>
+  <p>Powered by <a href="http://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+</footer>
+
+<script>
+$(document).ready(function() {
+
+    var table = $('#table');
+
+    // Table bordered
+    $('#table-bordered').change(function() {
+        var value = $( this ).val();
+        table.removeClass('table-bordered').addClass(value);
+    });
+
+    // Table striped
+    $('#table-striped').change(function() {
+        var value = $( this ).val();
+        table.removeClass('table-striped').addClass(value);
+    });
+  
+    // Table hover
+    $('#table-hover').change(function() {
+        var value = $( this ).val();
+        table.removeClass('table-hover').addClass(value);
+    });
+
+    // Table color
+    $('#table-color').change(function() {
+        var value = $(this).val();
+        table.removeClass(/^table-mc-/).addClass(value);
+    });
+});
+
+// jQuery’s hasClass and removeClass on steroids
+// by Nikita Vasilyev
+// https://github.com/NV/jquery-regexp-classes
+(function(removeClass) {
+
+	jQuery.fn.removeClass = function( value ) {
+		if ( value && typeof value.test === "function" ) {
+			for ( var i = 0, l = this.length; i < l; i++ ) {
+				var elem = this[i];
+				if ( elem.nodeType === 1 && elem.className ) {
+					var classNames = elem.className.split( /\s+/ );
+
+					for ( var n = classNames.length; n--; ) {
+						if ( value.test(classNames[n]) ) {
+							classNames.splice(n, 1);
+						}
+					}
+					elem.className = jQuery.trim( classNames.join(" ") );
+				}
+			}
+		} else {
+			removeClass.call(this, value);
+		}
+		return this;
+	}
+
+})(jQuery.fn.removeClass);
+</script>
+ 
+</body>
+</html>
+
+
+

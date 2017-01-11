@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<title>Summary</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link href="http://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'diabetics/summary_style.css' %}" />
+
+<body>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-content" style="max-width:1500px">
+
+  <!-- Header -->
+  <header class="w3-container w3-xlarge w3-padding-24">
+      <a href="{% url 'diabetics:index' %}" class="w3-btn w3-hover-white w3-round-large">HOME</a>
+    <a href="{% url 'diabetics:list_view' %}" class="w3-right w3-btn w3-hover-white w3-round-large">View All</a>
+  </header>
+
+  <!-- Summary -->
+  <div class="w3-row w3-center">
+      <div class="w3-center">
+          <!-- Bar-chart of total images in database -->
+          <h1 style="color:white;margin-left:30px;">Total Count of Images</h1>
+          <svg id="chartarea"></svg>
+	
+  <script type="text/javascript">
+        var data = d3.entries({{ result|safe }});
+        barchart(data);
+
+        function barchart(data){
+                var margin = {top: 40, right: 20, bottom: 30, left: 40},
+                    width = 700 - margin.left - margin.right,
+                    height = 500 - margin.top - margin.bottom;
+                var x = d3.scale.ordinal()
+                          .rangeRoundBands([0, width], .1);
+                var y = d3.scale.linear()
+                          .range([height, 0]);
+                var xAxis = d3.svg.axis()
+                              .scale(x)
+                              .orient("bottom");
+                var yAxis = d3.svg.axis()
+                              .scale(y)
+                              .orient("left")
+                var color = d3.scale.category20c();
+                var tip = d3.tip()
+                            .attr('class', 'd3-tip')
+                            .offset([-10, 0])
+                            .html(function(d) {return d.key+": <span style='color:white'>"+d.value+"</span>";});
+                // construc svg
+	        var svg = d3.select("#chartarea")
+                            .attr("width", width + margin.left + margin.right)
+                            .attr("height", height + margin.top + margin.bottom)
+                            .append("g")
+                            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                svg.call(tip);
+        
+                var dvalue = data.map(function(d){return d.value;});
+
+                x.domain(data.map(function(d){return d.key;}));
+		y.domain([0, d3.max(dvalue)]);
+                // Add Axis
+		svg.append("g")
+      		   .attr("class", "x axis")
+       		   .attr("transform", "translate(0," + height + ")")
+       		   .call(xAxis);
+                svg.append("g")
+                   .attr("class", "y axis")
+                   .call(yAxis)
+                  .append("text")
+                   .attr("transform", "rotate(-90)")
+                   .attr("y", 6)
+                   .attr("dy", ".71em")
+                   .style("text-anchor", "end")
+                   .text("Frequency");
+                // paint barchart on svg
+		svg.selectAll(".bar")
+                   .data(data)
+                  .enter().append("rect")
+                   .attr("class", "bar")
+                   .attr("x", function(d) { return x(d.key); })
+                   .attr("width", x.rangeBand())
+                   .attr("y", function(d) { return y(d.value); })
+                   .attr("height", function(d) { return height - y(d.value); })
+                   .on('mouseover', tip.show)
+                   .on('mouseout', tip.hide);
+
+                       
+	}//end of barchart
+	</script>
+  </div>	
+<!-- End Page Content -->
+</div>
+
+<!-- Footer -->
+<footer class="w3-center">
+  <p>Powered by <a href="http://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-blue">w3.css</a></p>
+</footer>
+ 
+</body>
+</html>
+
+
+
