@@ -10,7 +10,7 @@ A django-based website for displaying Diabetic Retinopathy Auto-Detection.
 * Download the website directory.
 * Install django by opening the terminal and entering the following command:
 ```
-pip install Django
+pip install django
 ```
 
 * Change to the website directory.
