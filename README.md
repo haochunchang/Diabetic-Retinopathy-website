@@ -1,4 +1,4 @@
-# Diabetic-Retinopathy-website
+# Diabetic Retinopathy Website
 A django-based website for displaying Diabetic Retinopathy Auto-Detection.
 
 ## The website requires [django](https://www.djangoproject.com/) being installed.
