@@ -30,18 +30,24 @@ Script | Preprocessing and model-averaging scripts.
 CNN | Modified cnn codes for small sample testing. 
 
 ### To replicate CNN classification:
-1. Fork [SparseConvNet](https://github.com/btgraham/SparseConvNet/tree/kaggle_Diabetic_Retinopathy_competition)
+1. Fork [SparseConvNet](https://github.com/btgraham/SparseConvNet/tree/kaggle_Diabetic_Retinopathy_competition), and switch to kaggle branch. 
+```bash
+git clone https://github.com/btgraham/SparseConvNet.git
+cd SparseConvNet
+git checkout kaggle_Diabetic_Retinopathy_competition
+```
 2. Replace files with our modified files:
   * Put files in Model into "kaggleDiabeticsRetinopathyModelfiles".
   * Put files in website/media into "Data/kaggleDiabeticRetinopathy/sample/".
-  * Put files in Scipt into "Data/kaggleDiabeticRetinopathy/".
+  * Put files in Script into "Data/kaggleDiabeticRetinopathy/".
   * Put codes in CNN into SparseConvNet directory.
+
 3. In "Data/kaggleDiabeticRetinopathy/", execute:
 ```
 ./createSample.sh
 python preprocessImages.py
 ```
-4. In SparseConvNet, execute:
+4. In SparseConvNet/, execute:
 ```
 make kaggleDiabetes1
 ./kaggleDiabetes1 
